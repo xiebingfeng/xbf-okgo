@@ -17,10 +17,10 @@ package com.lzy.okrx2.observable;
 
 import com.lzy.okgo.adapter.Call;
 import com.lzy.okgo.callback.Callback;
+import com.lzy.okgo.exception.HttpException;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.base.Request;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -110,6 +110,13 @@ public class CallEnqueueObservable<T> extends Observable<Response<T>> {
             Throwable throwable = response.getException();
             try {
                 terminated = true;
+                if (throwable instanceof HttpException) {
+                    if (((HttpException) throwable).response() == null && response.getRawResponse() != null) {
+                        ((HttpException) throwable).setCode(response.getRawResponse().code());
+                        ((HttpException) throwable).setMessage(response.getRawResponse().message());
+                    }
+                }
+
                 observer.onError(throwable);
             } catch (Throwable inner) {
                 Exceptions.throwIfFatal(inner);

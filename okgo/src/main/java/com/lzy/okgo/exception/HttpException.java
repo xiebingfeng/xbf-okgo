@@ -57,6 +57,15 @@ public class HttpException extends RuntimeException {
         return code;
     }
 
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
     public String message() {
         return message;
     }

@@ -101,8 +101,8 @@ public abstract class BaseCachePolicy<T> implements CachePolicy<T> {
             int responseCode = response.code();
 
             //network error
-            if (responseCode == 404 || responseCode == 403 || responseCode == 307 || responseCode >= 500) {
-                return Response.error(response.code(), false, rawCall, response, HttpException.NET_ERROR());
+            if (responseCode == 404 || responseCode >= 500) {
+                return Response.error(false, rawCall, response, HttpException.NET_ERROR());
             }
 
             T body = request.getConverter().convertResponse(response);
